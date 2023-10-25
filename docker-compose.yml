@@ -1,0 +1,31 @@
+version: '3'
+services:
+  web:
+    image: lunchapp:latest
+    container_name: lunchapp_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_DB_HOST: db
+      DJANGO_DB_PORT: 5432
+      DJANGO_DB_NAME: lunchapp
+      DJANGO_DB_USER: lunchappuser
+      DJANGO_DB_PASSWORD: secret
+
+  db:
+    image: postgres:13
+    container_name: lunchapp_db
+    environment:
+      POSTGRES_DB: lunchapp
+      POSTGRES_USER: lunchappuser
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
